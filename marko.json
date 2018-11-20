@@ -283,6 +283,13 @@
         "@invalid": "boolean",
         "@fluid": "boolean",
         "@multiline": "boolean"
+    },
+    "<ebay-tooltip>": {
+        "renderer": "./src/components/ebay-tooltip/index.js",
+        "@*": "expression",
+        "@html-attributes": "expression",
+        "@class": "string",
+        "@style": "string",
+        "@type": "string"
     }
-  }
-  
+}
