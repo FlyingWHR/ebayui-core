@@ -5,16 +5,16 @@ const template = require('./template.marko');
 
 const hostSelector = '.tooltip__host';
 const overlaySelector = '.tooltip__overlay';
-// const locations = [
-//     'top-left',
-//     'top',
-//     'top-right',
-//     'right',
-//     'bottom-left',
-//     'bottom-right',
-//     'bottom',
-//     'left'
-// ];
+const flyoutPointerLocation = {
+    'top-left': 'bottom-right',
+    top: 'bottom',
+    'top-right': 'bottom-left',
+    right: 'left',
+    'bottom-left': 'top-right',
+    'bottom-right': 'top-left',
+    bottom: 'top',
+    left: 'right'
+};
 
 function getInitialState(input) {
     const { style, open = false, type = 'tooltip', location = 'top-right' } = input;
@@ -29,7 +29,7 @@ function getInitialState(input) {
 }
 
 function getTemplateData(state) {
-    state.pointerLocation = getPointerLocation(state.location);
+    state.pointerLocation = flyoutPointerLocation[state.location];
 
     return state;
 }
@@ -58,59 +58,60 @@ function flyout() {
     const hostBoundingBox = host.getBoundingClientRect();
     const overlayBoundingBox = overlay.getBoundingClientRect();
 
-    // get the width of the host, divided by two (defaults to top-right location)
-    const flyoutRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 8))}px`;
-    const flyoutLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width + 4)}px`;
-    // get the height of the overlay, plus a little padding
+    // vertical alighment
+    const flyoutRight = `${(hostBoundingBox.width + pointer.offsetWidth)}px`;
+    const flyoutAboveBelowRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 8))}px`;
+    const flyoutLeft = `-${(overlayBoundingBox.width + pointer.offsetWidth)}px`;
+    const flyoutAboveBelowLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width + 4)}px`;
+    const flyoutVerticalMiddle = `-${((overlayBoundingBox.width / 2) - (hostBoundingBox.width / 2))}px`;
+
+    // horizontal alignment
     const flyoutAbove = `-${(overlayBoundingBox.height + pointer.offsetHeight)}px`;
     const flyoutBelow = `${(hostBoundingBox.height + pointer.offsetHeight)}px`;
+    const flyoutHorizontalMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2))}px`;
 
-    let overlayLeft = flyoutRight;
+    let overlayLeft = flyoutAboveBelowRight;
     let overlayTop = flyoutAbove;
 
     // determine the offsets for each type of location
     switch (this.state.location) {
-        case 'bottom-right':
-            // move middle relative to the host
+        case 'right':
             overlayLeft = flyoutRight;
+            overlayTop = flyoutHorizontalMiddle;
+            break;
+        case 'left':
+            overlayLeft = flyoutLeft;
+            overlayTop = flyoutHorizontalMiddle;
+            break;
+        case 'bottom':
+            overlayLeft = flyoutVerticalMiddle;
+            overlayTop = flyoutBelow;
+            break;
+        case 'top':
+            overlayLeft = flyoutVerticalMiddle;
+            overlayTop = flyoutAbove;
+            break;
+        case 'bottom-right':
+            overlayLeft = flyoutAboveBelowRight;
             overlayTop = flyoutBelow;
             break;
         case 'bottom-left':
-            // move middle relative to the overlay, minus the host
-            overlayLeft = flyoutLeft;
+            overlayLeft = flyoutAboveBelowLeft;
             overlayTop = flyoutBelow;
             break;
         case 'top-left':
-            // move middle relative to the overlay, minus the host
-            overlayLeft = flyoutLeft;
+            overlayLeft = flyoutAboveBelowLeft;
             overlayTop = flyoutAbove;
             break;
         case 'top-right':
         default:
-            // move middle relative to the host
-            overlayLeft = flyoutRight;
+            overlayLeft = flyoutAboveBelowRight;
             overlayTop = flyoutAbove;
             break;
     }
 
     overlay.style.left = overlayLeft;
     overlay.style.top = overlayTop;
-}
-
-function getPointerLocation(location) {
-    let pointerLocation = 'bottom-left';
-
-    switch (location) {
-        case 'top-left':
-            pointerLocation = 'bottom-right';
-            break;
-        case 'top-right':
-        default:
-            pointerLocation = 'bottom-left';
-            break;
-    }
-
-    return pointerLocation;
 }
 
 module.exports = require('marko-widgets').defineComponent({
