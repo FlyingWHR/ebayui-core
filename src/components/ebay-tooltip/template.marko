@@ -1,4 +1,9 @@
-<span w-bind class=data.class style=data.style ${data.htmlAttributes}>
+<span
+    class=data.class
+    style=data.style
+    ${data.htmlAttributes}
+    w-on-expander-expand='handleExpand'
+    w-bind>
     <var tooltipId=("tooltip-" + widget.id)/>
     <ebay-button
         variant="icon"
@@ -11,11 +16,9 @@
         <ebay-icon type="inline" name="settings"/>
     </ebay-button>
     <div class="tooltip__overlay" id=tooltipId role="tooltip">
-        <div class="bubble" style="top: -115px; left: -8px;">
-            <span class="bubble__pointer bubble__pointer--bottom-left"></span>
-            <div class="bubble__mask">
-                <div class="bubble__cell" w-body/>
-            </div>
+        <span class="tooltip__pointer tooltip__pointer--bottom-left"></span>
+        <div class="tooltip__mask">
+            <div class="tooltip__cell" w-body/>
         </div>
     </div>
 </span>

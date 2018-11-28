@@ -290,6 +290,7 @@
         "@html-attributes": "expression",
         "@class": "string",
         "@style": "string",
-        "@type": "string"
+        "@type": "string",
+        "@location": "string"
     }
 }
