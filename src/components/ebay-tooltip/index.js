@@ -5,7 +5,6 @@ const template = require('./template.marko');
 
 const hostSelector = '.tooltip__host';
 const overlaySelector = '.tooltip__overlay';
-const pointerSelecter = '.tooltip__pointer';
 // const locations = [
 //     'top-left',
 //     'top',
@@ -30,6 +29,8 @@ function getInitialState(input) {
 }
 
 function getTemplateData(state) {
+    state.pointerLocation = getPointerLocation(state.location);
+
     return state;
 }
 
@@ -52,38 +53,64 @@ function handleExpand() {
 function flyout() {
     const host = this.el.querySelector(hostSelector);
     const overlay = this.el.querySelector(overlaySelector);
-    const pointer = this.el.querySelector(pointerSelecter);
+    const pointer = this.el.querySelector('.tooltip__pointer');
 
     const hostBoundingBox = host.getBoundingClientRect();
     const overlayBoundingBox = overlay.getBoundingClientRect();
-    const pointerBoundingBox = pointer.getBoundingClientRect();
 
-    const pointerSize = pointer.offsetWidth;
+    // get the width of the host, divided by two (defaults to top-right location)
+    const flyoutRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 8))}px`;
+    const flyoutLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width + 4)}px`;
+    // get the height of the overlay, plus a little padding
+    const flyoutAbove = `-${(overlayBoundingBox.height + pointer.offsetHeight)}px`;
+    const flyoutBelow = `${(hostBoundingBox.height + pointer.offsetHeight)}px`;
 
-    // get the width of the host, divided by two
-    let hostMiddle = `${((hostBoundingBox.width / 2) - pointerSize)}px`;
-    let overlayTop = `-${(overlayBoundingBox.height + pointerSize + 4)}px`;
+    let overlayLeft = flyoutRight;
+    let overlayTop = flyoutAbove;
 
     // determine the offsets for each type of location
     switch (this.state.location) {
-        case 'top-right':
-            hostMiddle = `${((hostBoundingBox.width / 2) - pointerSize)}px`;
-            overlayTop = `-${(overlayBoundingBox.height + pointerSize + 4)}px`;
+        case 'bottom-right':
+            // move middle relative to the host
+            overlayLeft = flyoutRight;
+            overlayTop = flyoutBelow;
             break;
+        case 'bottom-left':
+            // move middle relative to the overlay, minus the host
+            overlayLeft = flyoutLeft;
+            overlayTop = flyoutBelow;
+            break;
+        case 'top-left':
+            // move middle relative to the overlay, minus the host
+            overlayLeft = flyoutLeft;
+            overlayTop = flyoutAbove;
+            break;
+        case 'top-right':
         default:
+            // move middle relative to the host
+            overlayLeft = flyoutRight;
+            overlayTop = flyoutAbove;
             break;
     }
 
-    console.table({
-        'hostMiddle': hostMiddle,
-        'overlayTop': overlayTop,
-        'pointerSize': pointerSize,
-        'overlayBoundingBox.height': overlayBoundingBox.height,
-        'pointerBoundingBox.height': pointerBoundingBox.height
-    });
-
-    overlay.style.left = hostMiddle;
+    overlay.style.left = overlayLeft;
     overlay.style.top = overlayTop;
+}
+
+function getPointerLocation(location) {
+    let pointerLocation = 'bottom-left';
+
+    switch (location) {
+        case 'top-left':
+            pointerLocation = 'bottom-right';
+            break;
+        case 'top-right':
+        default:
+            pointerLocation = 'bottom-left';
+            break;
+    }
+
+    return pointerLocation;
 }
 
 module.exports = require('marko-widgets').defineComponent({
