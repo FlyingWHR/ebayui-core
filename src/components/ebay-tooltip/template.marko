@@ -18,7 +18,9 @@
     <div class="tooltip__overlay" id=tooltipId role="tooltip">
         <span class="tooltip__pointer tooltip__pointer--${data.pointerLocation}"></span>
         <div class="tooltip__mask">
-            <div class="tooltip__cell" w-body/>
+            <div class="tooltip__cell" body-only-if=false>
+                <div class="tooltip__content" w-body/>
+            </div>
         </div>
     </div>
 </span>
