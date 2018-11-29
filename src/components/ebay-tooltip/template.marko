@@ -5,20 +5,18 @@
     w-on-expander-expand='handleExpand'
     w-bind>
     <var tooltipId=("tooltip-" + widget.id)/>
-    <ebay-button
-        variant="icon"
-        no-text
+    <button
         accesskey="s"
         class="tooltip__host icon-btn"
         aria-describedby=tooltipId
         aria-expanded=(data.open?'true':'false')
         aria-label="Settings">
-        <ebay-icon type="inline" name="settings"/>
-    </ebay-button>
+        <ebay-icon type="inline" name="info"/>
+    </button>
     <div class="tooltip__overlay" id=tooltipId role="tooltip">
         <span class="tooltip__pointer tooltip__pointer--${data.pointerLocation}"></span>
         <div class="tooltip__mask">
-            <div class="tooltip__cell" body-only-if=false>
+            <div class="tooltip__cell">
                 <div class="tooltip__content" w-body/>
             </div>
         </div>

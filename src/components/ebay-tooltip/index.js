@@ -59,15 +59,15 @@ function flyout() {
     const overlayBoundingBox = overlay.getBoundingClientRect();
 
     // vertical alighment
-    const flyoutRight = `${(hostBoundingBox.width + pointer.offsetWidth)}px`;
-    const flyoutAboveBelowRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 8))}px`;
-    const flyoutLeft = `-${(overlayBoundingBox.width + pointer.offsetWidth)}px`;
-    const flyoutAboveBelowLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width + 4)}px`;
+    const flyoutRight = `${(hostBoundingBox.width + 8)}px`;
+    const flyoutAboveBelowRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 4))}px`;
+    const flyoutLeft = `-${(overlayBoundingBox.width + 8)}px`;
+    const flyoutAboveBelowLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width - 4)}px`;
     const flyoutVerticalMiddle = `-${((overlayBoundingBox.width / 2) - (hostBoundingBox.width / 2))}px`;
 
     // horizontal alignment
-    const flyoutAbove = `-${(overlayBoundingBox.height + pointer.offsetHeight)}px`;
-    const flyoutBelow = `${(hostBoundingBox.height + pointer.offsetHeight)}px`;
+    const flyoutAbove = `-${(overlayBoundingBox.height + 8)}px`;
+    const flyoutBelow = `${(hostBoundingBox.height + 8)}px`;
     const flyoutHorizontalMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2))}px`;
 
     let overlayLeft = flyoutAboveBelowRight;
