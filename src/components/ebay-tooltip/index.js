@@ -22,12 +22,12 @@ function getInitialState(input) {
         contentHeading,
         a11yCloseText } = input;
 
-    let open = false;
+    let expanded = false;
 
-    if (input.open && input.open !== 'false') {
-        open = true;
+    if (input.expanded && input.expanded !== 'false') {
+        expanded = true;
     } else if (type === 'tourtip') {
-        open = true;
+        expanded = true;
     }
 
     return {
@@ -39,27 +39,20 @@ function getInitialState(input) {
         style,
         type,
         location,
-        open,
+        expanded,
         contentHeading,
         a11yCloseText
     };
 }
 
 function getTemplateData(state) {
-    let tourtipOpenClass = '';
-
-    if (state.type === 'tourtip' && state.open) {
-        tourtipOpenClass = 'tourtip--expanded';
-    }
-
-    state.class = [state.class, tourtipOpenClass];
     state.pointerLocation = flyoutPointerLocation[state.location];
 
     return state;
 }
 
 function init() {
-    const expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
+    this.expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
         hostSelector: this.state.hostSelector,
         contentSelector: this.state.overlaySelector,
         focusManagement: 'focusable',
@@ -69,20 +62,32 @@ function init() {
         autoCollapse: this.state.type !== 'tourtip'
     });
 
-    if (this.type === 'tourtip' && this.state.open) {
+    if (this.type === 'tourtip' && this.state.expanded) {
+        this.handleExpand();
+    }
+}
+
+function onRender() {
+    if (this.expanded) {
         this.flyout();
     }
 }
 
 function handleExpand() {
-    this.state.open = true;
+    this.state.expanded = true;
     this.flyout();
     emitAndFire(this, 'tooltip-expand');
 }
 
 function handleCollapse() {
-    this.state.open = false;
+    this.state.expanded = false;
     emitAndFire(this, 'tooltip-collapse');
+
+    console.log(`expanded`, this.state.expanded);
+}
+
+function handleTooltipClose() {
+    this.expander.collapse();
 }
 
 function flyout() {
@@ -154,7 +159,9 @@ module.exports = require('marko-widgets').defineComponent({
     getInitialState,
     getTemplateData,
     init,
+    onRender,
     handleExpand,
     handleCollapse,
+    handleTooltipClose,
     flyout
 });
