@@ -3,8 +3,6 @@ const emitAndFire = require('../../common/emit-and-fire');
 const processHtmlAttributes = require('../../common/html-attributes');
 const template = require('./template.marko');
 
-const hostSelector = '.tooltip__host';
-const overlaySelector = '.tooltip__overlay';
 const flyoutPointerLocation = {
     'top-left': 'bottom-right',
     top: 'bottom',
@@ -17,18 +15,44 @@ const flyoutPointerLocation = {
 };
 
 function getInitialState(input) {
-    const { style, open = false, type = 'tooltip', location = 'top-right' } = input;
+    const {
+        style,
+        type = 'tooltip',
+        location = 'top-right',
+        contentHeading,
+        a11yCloseText } = input;
+
+    let open = false;
+
+    if (input.open && input.open !== 'false') {
+        open = true;
+    } else if (type === 'tourtip') {
+        open = true;
+    }
+
     return {
         htmlAttributes: processHtmlAttributes(input),
-        class: [`tooltip`, input.class],
+        class: [type, input.class],
+        baseClass: type,
+        hostSelector: `.${type}__host`,
+        overlaySelector: `.${type}__overlay`,
         style,
         type,
         location,
-        open
+        open,
+        contentHeading,
+        a11yCloseText
     };
 }
 
 function getTemplateData(state) {
+    let tourtipOpenClass = '';
+
+    if (state.type === 'tourtip' && state.open) {
+        tourtipOpenClass = 'tourtip--expanded';
+    }
+
+    state.class = [state.class, tourtipOpenClass];
     state.pointerLocation = flyoutPointerLocation[state.location];
 
     return state;
@@ -36,24 +60,35 @@ function getTemplateData(state) {
 
 function init() {
     const expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
-        hostSelector: hostSelector,
-        contentSelector: overlaySelector,
+        hostSelector: this.state.hostSelector,
+        contentSelector: this.state.overlaySelector,
         focusManagement: 'focusable',
-        expandOnFocus: true,
-        expandOnHover: true,
-        autoCollapse: true
+        expandOnFocus: this.state.type === 'tooltip',
+        expandOnHover: this.state.type === 'tooltip',
+        expandOnClick: this.state.type === 'infotip',
+        autoCollapse: this.state.type !== 'tourtip'
     });
+
+    if (this.type === 'tourtip' && this.state.open) {
+        this.flyout();
+    }
 }
 
 function handleExpand() {
+    this.state.open = true;
     this.flyout();
     emitAndFire(this, 'tooltip-expand');
 }
 
+function handleCollapse() {
+    this.state.open = false;
+    emitAndFire(this, 'tooltip-collapse');
+}
+
 function flyout() {
-    const host = this.el.querySelector(hostSelector);
-    const overlay = this.el.querySelector(overlaySelector);
-    const pointer = this.el.querySelector('.tooltip__pointer');
+    const host = this.el.querySelector(this.state.hostSelector);
+    const overlay = this.el.querySelector(this.state.overlaySelector);
+    const pointer = this.el.querySelector(`.${this.state.baseClass}__pointer`);
 
     const hostBoundingBox = host.getBoundingClientRect();
     const overlayBoundingBox = overlay.getBoundingClientRect();
@@ -120,5 +155,6 @@ module.exports = require('marko-widgets').defineComponent({
     getTemplateData,
     init,
     handleExpand,
+    handleCollapse,
     flyout
 });

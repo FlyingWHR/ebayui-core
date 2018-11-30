@@ -3,21 +3,28 @@
     style=data.style
     ${data.htmlAttributes}
     w-on-expander-expand='handleExpand'
+    w-on-expander-collapse='handleCollapse'
     w-bind>
-    <var tooltipId=("tooltip-" + widget.id)/>
+    <var tooltipId=`${data.baseClass}-${widget.id}`/>
     <button
         accesskey="s"
-        class="tooltip__host icon-btn"
+        class="${data.baseClass}__host icon-btn"
         aria-describedby=tooltipId
         aria-expanded=(data.open?'true':'false')
         aria-label="Settings">
         <ebay-icon type="inline" name="info"/>
     </button>
-    <div class="tooltip__overlay" id=tooltipId role="tooltip">
-        <span class="tooltip__pointer tooltip__pointer--${data.pointerLocation}"></span>
-        <div class="tooltip__mask">
-            <div class="tooltip__cell">
-                <div class="tooltip__content" w-body/>
+    <div class="${data.baseClass}__overlay" id=tooltipId role="tooltip">
+        <span class="${data.baseClass}__pointer ${data.baseClass}__pointer--${data.pointerLocation}"></span>
+        <div class="${data.baseClass}__mask">
+            <div class="${data.baseClass}__cell">
+                <span class="${data.baseClass}__content">
+                    <h2 class="${data.baseClass}__heading" if(data.contentHeading)>${data.contentHeading}</h2>
+                    <span body-only-if(true) w-body/>
+                </span>
+                <button if(data.type !== 'tooltip') aria-label=data.a11yCloseText class="${data.baseClass}__close" type="button">
+                    <span aria-hidden="true" role="img"></span>
+                </button>
             </div>
         </div>
     </div>

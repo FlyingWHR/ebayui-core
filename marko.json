@@ -291,6 +291,8 @@
         "@class": "string",
         "@style": "string",
         "@type": "string",
-        "@location": "string"
+        "@location": "string",
+        "@content-heading": "string",
+        "@a11y-close-text": "string"
     }
 }
