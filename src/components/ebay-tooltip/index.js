@@ -22,6 +22,13 @@ function getInitialState(input) {
         contentHeading,
         a11yCloseText } = input;
 
+    const hosts = (input.hosts || []).map(content => ({
+        htmlAttributes: processHtmlAttributes(content),
+        classes: content.class,
+        style: content.style,
+        renderBody: content.renderBody
+    }));
+
     const headings = (input.headings || []).map(heading => ({
         htmlAttributes: processHtmlAttributes(heading),
         classes: heading.class,
@@ -56,6 +63,7 @@ function getInitialState(input) {
         expanded,
         contentHeading,
         a11yCloseText,
+        hosts,
         headings,
         contents
     };

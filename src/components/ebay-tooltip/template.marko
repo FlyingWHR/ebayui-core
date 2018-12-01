@@ -20,17 +20,12 @@
         </button>
     </if>
     <else>
-        <!--
-            TODO: change to sub-tag way of handling the wrapped content
-        -->
-        <button
-            accesskey="s"
-            class=`${data.baseClass}__host icon-btn`
-            aria-describedby=tooltipId
-            aria-expanded=(data.expanded?'true':'false')
-            aria-label="Settings">
-            <ebay-icon type="inline" name="info"/>
-        </button>
+        <for(content in data.hosts)>
+            <div
+                class=[content.class, `${data.baseClass}__host`]
+                style=content.style
+                w-body=content.renderBody/>
+        </for>
     </else>
     <div
         class="${data.baseClass}__overlay"
