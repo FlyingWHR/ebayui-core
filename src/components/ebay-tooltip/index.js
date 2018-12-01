@@ -22,6 +22,20 @@ function getInitialState(input) {
         contentHeading,
         a11yCloseText } = input;
 
+    const headings = (input.headings || []).map(heading => ({
+        htmlAttributes: processHtmlAttributes(heading),
+        classes: heading.class,
+        style: heading.style,
+        renderBody: heading.renderBody
+    }));
+
+    const contents = (input.contents || []).map(content => ({
+        htmlAttributes: processHtmlAttributes(content),
+        classes: content.class,
+        style: content.style,
+        renderBody: content.renderBody
+    }));
+
     let expanded = false;
 
     if (input.expanded && input.expanded !== 'false') {
@@ -41,7 +55,9 @@ function getInitialState(input) {
         location,
         expanded,
         contentHeading,
-        a11yCloseText
+        a11yCloseText,
+        headings,
+        contents
     };
 }
 
@@ -55,7 +71,7 @@ function init() {
     this.expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
         hostSelector: this.state.hostSelector,
         contentSelector: this.state.overlaySelector,
-        focusManagement: 'focusable',
+        focusManagement: this.state.type === 'tourtip' ? null : 'focusable',
         expandOnFocus: this.state.type === 'tooltip',
         expandOnHover: this.state.type === 'tooltip',
         expandOnClick: this.state.type === 'infotip',
@@ -68,7 +84,7 @@ function init() {
 }
 
 function onRender() {
-    if (this.expanded) {
+    if (this.state.expanded) {
         this.flyout();
     }
 }
@@ -77,13 +93,13 @@ function handleExpand() {
     this.state.expanded = true;
     this.flyout();
     emitAndFire(this, 'tooltip-expand');
+    this.setStateDirty();
 }
 
 function handleCollapse() {
     this.state.expanded = false;
     emitAndFire(this, 'tooltip-collapse');
-
-    console.log(`expanded`, this.state.expanded);
+    this.setStateDirty();
 }
 
 function handleTooltipClose() {

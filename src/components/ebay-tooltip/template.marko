@@ -1,5 +1,8 @@
 <span
-    class=[data.class, { [`${data.baseClass}--expanded`]: data.expanded }]
+    class=[
+        data.class,
+        (data.type === 'tourtip' && data.expanded && `${data.baseClass}--expanded`)
+    ]
     style=data.style
     ${data.htmlAttributes}
     w-on-expander-expand='handleExpand'
@@ -29,7 +32,6 @@
             <ebay-icon type="inline" name="info"/>
         </button>
     </else>
-    <% console.log(data.type === 'tourtip' && data.expanded) %>
     <div
         class="${data.baseClass}__overlay"
         id=tooltipId
@@ -39,8 +41,19 @@
         <div class="${data.baseClass}__mask">
             <div class="${data.baseClass}__cell">
                 <span class="${data.baseClass}__content">
-                    <h2 class="${data.baseClass}__heading" id="${data.baseClass}-label" if(data.contentHeading)>${data.contentHeading}</h2>
-                    <span body-only-if(true) w-body/>
+                    <for(heading in data.headings)>
+                        <h2
+                            class=["${data.baseClass}__heading", heading.class]
+                            style=heading.style
+                            id="${data.baseClass}-label"
+                            w-body=heading.renderBody/>
+                    </for>
+                    <for(content in data.contents)>
+                        <div
+                            class=content.class
+                            style=content.style
+                            w-body=content.renderBody/>
+                    </for>
                 </span>
                 <button
                     if(data.type !== 'tooltip')

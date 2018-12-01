@@ -294,6 +294,24 @@
         "@location": "string",
         "@expanded": "string",
         "@content-heading": "string",
-        "@a11y-close-text": "string"
+        "@a11y-close-text": "string",
+        "@headings <heading>[]": {
+            "@*": "expression",
+            "@html-attributes": "expression",
+            "@class": "string",
+            "@style": "string"
+        },
+        "@contents <content>[]": {
+            "@*": "expression",
+            "@html-attributes": "expression",
+            "@class": "string",
+            "@style": "string"
+        }
+    },
+    "<ebay-tooltip-heading>": {
+        "transformer": "./src/common/transformers/attribute-tags/index.js"
+    },
+    "<ebay-tooltip-content>": {
+        "transformer": "./src/common/transformers/attribute-tags/index.js"
     }
 }
