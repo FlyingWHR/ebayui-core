@@ -61,6 +61,7 @@ function getInitialState(input) {
         type,
         location,
         expanded,
+        expandInit: false,
         contentHeading,
         a11yCloseText,
         hosts,
@@ -76,6 +77,8 @@ function getTemplateData(state) {
 }
 
 function init() {
+    this.flyoutCalculated = false;
+
     this.expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
         hostSelector: this.state.hostSelector,
         contentSelector: this.state.overlaySelector,
@@ -86,8 +89,8 @@ function init() {
         autoCollapse: this.state.type !== 'tourtip'
     });
 
-    if (this.type === 'tourtip' && this.state.expanded) {
-        this.handleExpand();
+    if (this.state.type === 'tourtip' && this.state.expanded) {
+        this.setState('expandInit', true);
     }
 }
 
@@ -98,20 +101,19 @@ function onRender() {
 }
 
 function handleExpand() {
-    this.state.expanded = true;
+    this.setState('expanded', true);
     this.flyout();
     emitAndFire(this, 'tooltip-expand');
-    this.setStateDirty();
 }
 
 function handleCollapse() {
-    this.state.expanded = false;
+    this.setState('expanded', false);
     emitAndFire(this, 'tooltip-collapse');
-    this.setStateDirty();
 }
 
 function handleTooltipClose() {
     this.expander.collapse();
+    this.handleCollapse();
 }
 
 function flyout() {
@@ -122,12 +124,18 @@ function flyout() {
     const hostBoundingBox = host.getBoundingClientRect();
     const overlayBoundingBox = overlay.getBoundingClientRect();
 
+    let flyoutLeftOffset = hostBoundingBox.width / 2;
+
+    if (hostBoundingBox.width > overlayBoundingBox.width) {
+        flyoutLeftOffset = 0;
+    }
+
     // vertical alighment
     const flyoutRight = `${(hostBoundingBox.width + 8)}px`;
-    const flyoutAboveBelowRight = `${((hostBoundingBox.width / 2) - (pointer.offsetWidth + 4))}px`;
     const flyoutLeft = `-${(overlayBoundingBox.width + 8)}px`;
     const flyoutAboveBelowLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width - 4)}px`;
-    const flyoutVerticalMiddle = `-${((overlayBoundingBox.width / 2) - (hostBoundingBox.width / 2))}px`;
+    const flyoutAboveBelowRight = `${(flyoutLeftOffset - (pointer.offsetWidth + 4))}px`;
+    const flyoutVerticalMiddle = `${((hostBoundingBox.width / 2) - (overlayBoundingBox.width / 2))}px`;
 
     // horizontal alignment
     const flyoutAbove = `-${(overlayBoundingBox.height + 8)}px`;

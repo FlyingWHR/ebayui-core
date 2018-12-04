@@ -1,7 +1,7 @@
 <span
     class=[
         data.class,
-        (data.type === 'tourtip' && data.expanded && `${data.baseClass}--expanded`)
+        (data.type === 'tourtip' && data.expanded && data.expandInit && `${data.baseClass}--expanded`)
     ]
     style=data.style
     ${data.htmlAttributes}
