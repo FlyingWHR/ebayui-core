@@ -1,7 +1,7 @@
 <span
     class=[
         data.class,
-        (data.type === 'tourtip' && data.expanded && data.expandInit && `${data.baseClass}--expanded`)
+        (data.type === 'tourtip' && data.expandInit && data.expanded && `${data.baseClass}--expanded`)
     ]
     style=data.style
     ${data.htmlAttributes}
@@ -14,7 +14,7 @@
             accesskey="s"
             class=`${data.baseClass}__host icon-btn`
             aria-describedby=tooltipId
-            aria-expanded=(data.expanded && data.expandInit ? 'true' : 'false')
+            aria-expanded=(data.expandInit && data.expanded ? 'true' : 'false')
             aria-label="Settings">
             <ebay-icon type="inline" name="info"/>
         </button>

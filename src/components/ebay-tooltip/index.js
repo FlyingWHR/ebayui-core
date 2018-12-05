@@ -81,8 +81,6 @@ function getTemplateData(state) {
 }
 
 function init() {
-    this.flyoutCalculated = false;
-
     this.expander = new Expander(this.el, { // eslint-disable-line no-unused-vars
         hostSelector: this.state.hostSelector,
         contentSelector: this.state.overlaySelector,
@@ -100,13 +98,14 @@ function init() {
 
 function onRender() {
     if (this.state.expanded) {
-        this.flyout();
+        this.alignOverlay();
     }
 }
 
 function handleExpand() {
+    this.setState('expandInit', true);
     this.setState('expanded', true);
-    this.flyout();
+    this.alignOverlay();
     emitAndFire(this, 'tooltip-expand');
 }
 
@@ -120,7 +119,7 @@ function handleTooltipClose() {
     this.handleCollapse();
 }
 
-function flyout() {
+function alignOverlay() {
     const host = this.el.querySelector(this.state.hostSelector);
     const overlay = this.el.querySelector(this.state.overlaySelector);
     const pointer = this.el.querySelector(`.${this.state.baseClass}__pointer`);
@@ -217,5 +216,5 @@ module.exports = require('marko-widgets').defineComponent({
     handleExpand,
     handleCollapse,
     handleTooltipClose,
-    flyout
+    alignOverlay
 });
