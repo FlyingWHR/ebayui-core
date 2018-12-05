@@ -1,46 +1,108 @@
-<div>
-    <ebay-tooltip>
-        <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
-    </ebay-tooltip>
+<style>
+.tooltip-demos {
+    display: flex;
+    padding: 8px 0;
+}
 
-    <span style="margin-left: 8px;">
+.tooltip-demos > span {
+    flex: 1;
+}
+</style>
+
+<div class="tooltip-demos" style="border-bottom: 1px solid #8a8a8a;">
+    <span>
+        default (none specified):
+        <ebay-tooltip expanded>
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+</div>
+
+<div class="tooltip-demos">
+    <span>
+        top-right:
+        <ebay-tooltip location="top-right">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+
+    <span>
+        top-left:
         <ebay-tooltip location="top-left">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>
 
-    <span style="margin-left: 8px;">
+    <span>
+        bottom-right:
         <ebay-tooltip location="bottom-right">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>
 
-    <span style="margin-left: 8px;">
+    <span>
+        bottom-left:
         <ebay-tooltip location="bottom-left">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>
 </div>
 
-<div style="margin-top: 8px;">
-    <ebay-tooltip location="top">
-        <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
-    </ebay-tooltip>
+<div class="tooltip-demos">
+    <span>
+        top:
+        <ebay-tooltip location="top">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
 
-    <span style="margin-left: 8px;">
+    <span>
+        bottom:
         <ebay-tooltip location="bottom">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>
 
-    <span style="margin-left: 8px;">
+    <span>
+        right:
         <ebay-tooltip location="right">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>
 
-    <span style="margin-left: 8px;">
+    <span>
+        left:
         <ebay-tooltip location="left">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+</div>
+
+<div class="tooltip-demos">
+    <span>
+        right-bottom:
+        <ebay-tooltip location="right-bottom">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+
+    <span>
+        right-top:
+        <ebay-tooltip location="right-top">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+
+    <span>
+        left-bottom:
+        <ebay-tooltip location="left-bottom">
+            <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
+        </ebay-tooltip>
+    </span>
+
+    <span>
+        left-top:
+        <ebay-tooltip location="left-top">
             <ebay-tooltip-content><p>Use Access Key 'S' to display settings.</p></ebay-tooltip-content>
         </ebay-tooltip>
     </span>

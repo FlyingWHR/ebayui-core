@@ -8,10 +8,14 @@ const flyoutPointerLocation = {
     top: 'bottom',
     'top-right': 'bottom-left',
     right: 'left',
+    'right-bottom': 'left-top',
+    'right-top': 'left-bottom',
     'bottom-left': 'top-right',
     'bottom-right': 'top-left',
     bottom: 'top',
-    left: 'right'
+    left: 'right',
+    'left-bottom': 'right-top',
+    'left-top': 'right-bottom'
 };
 
 function getInitialState(input) {
@@ -89,7 +93,7 @@ function init() {
         autoCollapse: this.state.type !== 'tourtip'
     });
 
-    if (this.state.type === 'tourtip' && this.state.expanded) {
+    if (this.state.expanded) {
         this.setState('expandInit', true);
     }
 }
@@ -127,7 +131,7 @@ function flyout() {
     let flyoutLeftOffset = hostBoundingBox.width / 2;
 
     if (hostBoundingBox.width > overlayBoundingBox.width) {
-        flyoutLeftOffset = 0;
+        flyoutLeftOffset = pointer.offsetWidth / 2;
     }
 
     // vertical alighment
@@ -140,6 +144,8 @@ function flyout() {
     // horizontal alignment
     const flyoutAbove = `-${(overlayBoundingBox.height + 8)}px`;
     const flyoutBelow = `${(hostBoundingBox.height + 8)}px`;
+    const flyoutLeftRightAbove = `-${(hostBoundingBox.height - pointer.offsetHeight)}px`;
+    const flyoutLeftRightBelow = `-4px`;
     const flyoutHorizontalMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2))}px`;
 
     let overlayLeft = flyoutAboveBelowRight;
@@ -151,9 +157,25 @@ function flyout() {
             overlayLeft = flyoutRight;
             overlayTop = flyoutHorizontalMiddle;
             break;
+        case 'right-bottom':
+            overlayLeft = flyoutRight;
+            overlayTop = flyoutLeftRightBelow;
+            break;
+        case 'right-top':
+            overlayLeft = flyoutRight;
+            overlayTop = flyoutLeftRightAbove;
+            break;
         case 'left':
             overlayLeft = flyoutLeft;
             overlayTop = flyoutHorizontalMiddle;
+            break;
+        case 'left-bottom':
+            overlayLeft = flyoutLeft;
+            overlayTop = flyoutLeftRightBelow;
+            break;
+        case 'left-top':
+            overlayLeft = flyoutLeft;
+            overlayTop = flyoutLeftRightAbove;
             break;
         case 'bottom':
             overlayLeft = flyoutVerticalMiddle;

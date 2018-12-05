@@ -14,7 +14,7 @@
             accesskey="s"
             class=`${data.baseClass}__host icon-btn`
             aria-describedby=tooltipId
-            aria-expanded=(data.expanded?'true':'false')
+            aria-expanded=(data.expanded && data.expandInit ? 'true' : 'false')
             aria-label="Settings">
             <ebay-icon type="inline" name="info"/>
         </button>
