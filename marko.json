@@ -292,8 +292,7 @@
         "@style": "string",
         "@type": "string",
         "@location": "string",
-        "@expanded": "string",
-        "@content-heading": "string",
+        "@aria-label": "string",
         "@a11y-close-text": "string",
         "@hosts <host>[]": {
             "@*": "expression",

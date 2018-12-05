@@ -24,6 +24,7 @@ function getInitialState(input) {
         type = 'tooltip',
         location = 'top-right',
         contentHeading,
+        ariaLabel,
         a11yCloseText } = input;
 
     const hosts = (input.hosts || []).map(content => ({
@@ -47,14 +48,6 @@ function getInitialState(input) {
         renderBody: content.renderBody
     }));
 
-    let expanded = false;
-
-    if (input.expanded && input.expanded !== 'false') {
-        expanded = true;
-    } else if (type === 'tourtip') {
-        expanded = true;
-    }
-
     return {
         htmlAttributes: processHtmlAttributes(input),
         class: [type, input.class],
@@ -64,9 +57,10 @@ function getInitialState(input) {
         style,
         type,
         location,
-        expanded,
+        expanded: type === 'tourtip',
         expandInit: false,
         contentHeading,
+        ariaLabel,
         a11yCloseText,
         hosts,
         headings,
@@ -88,7 +82,7 @@ function init() {
         expandOnFocus: this.state.type === 'tooltip',
         expandOnHover: this.state.type === 'tooltip',
         expandOnClick: this.state.type === 'infotip',
-        autoCollapse: this.state.type !== 'tourtip'
+        autoCollapse: this.state.type === 'tooltip'
     });
 
     if (this.state.expanded) {
@@ -134,20 +128,19 @@ function alignOverlay() {
     }
 
     // vertical alighment
-    const flyoutRight = `${(hostBoundingBox.width + 8)}px`;
-    const flyoutLeft = `-${(overlayBoundingBox.width + 8)}px`;
-    const flyoutAboveBelowLeft = `-${(overlayBoundingBox.width - hostBoundingBox.width - 4)}px`;
+    const flyoutRight = `${(hostBoundingBox.width + 16)}px`;
     const flyoutAboveBelowRight = `${(flyoutLeftOffset - (pointer.offsetWidth + 4))}px`;
     const flyoutVerticalMiddle = `${((hostBoundingBox.width / 2) - (overlayBoundingBox.width / 2))}px`;
 
     // horizontal alignment
-    const flyoutAbove = `-${(overlayBoundingBox.height + 8)}px`;
-    const flyoutBelow = `${(hostBoundingBox.height + 8)}px`;
-    const flyoutLeftRightAbove = `-${(hostBoundingBox.height - pointer.offsetHeight)}px`;
+    const flyoutAbove = `-${(overlayBoundingBox.height + 16)}px`;
+    const flyoutBelow = `${(hostBoundingBox.height + 16)}px`;
+    const flyoutLeftRightAbove = `-${(overlayBoundingBox.height - hostBoundingBox.height - 4)}px`;
     const flyoutLeftRightBelow = `-4px`;
     const flyoutHorizontalMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2))}px`;
 
     let overlayLeft = flyoutAboveBelowRight;
+    let overlayRight = 'auto';
     let overlayTop = flyoutAbove;
 
     // determine the offsets for each type of location
@@ -165,15 +158,18 @@ function alignOverlay() {
             overlayTop = flyoutLeftRightAbove;
             break;
         case 'left':
-            overlayLeft = flyoutLeft;
+            overlayLeft = 'auto';
+            overlayRight = flyoutRight;
             overlayTop = flyoutHorizontalMiddle;
             break;
         case 'left-bottom':
-            overlayLeft = flyoutLeft;
+            overlayLeft = 'auto';
+            overlayRight = flyoutRight;
             overlayTop = flyoutLeftRightBelow;
             break;
         case 'left-top':
-            overlayLeft = flyoutLeft;
+            overlayLeft = 'auto';
+            overlayRight = flyoutRight;
             overlayTop = flyoutLeftRightAbove;
             break;
         case 'bottom':
@@ -189,11 +185,13 @@ function alignOverlay() {
             overlayTop = flyoutBelow;
             break;
         case 'bottom-left':
-            overlayLeft = flyoutAboveBelowLeft;
+            overlayLeft = 'auto';
+            overlayRight = flyoutLeftRightBelow;
             overlayTop = flyoutBelow;
             break;
         case 'top-left':
-            overlayLeft = flyoutAboveBelowLeft;
+            overlayLeft = 'auto';
+            overlayRight = flyoutLeftRightBelow;
             overlayTop = flyoutAbove;
             break;
         case 'top-right':
@@ -204,6 +202,7 @@ function alignOverlay() {
     }
 
     overlay.style.left = overlayLeft;
+    overlay.style.right = overlayRight;
     overlay.style.top = overlayTop;
 }
 
