@@ -22,7 +22,11 @@ function getInitialState(input) {
     const {
         style,
         type = 'tooltip',
-        location = 'top-right',
+        location = 'top',
+        styleTop,
+        styleLeft,
+        styleRight,
+        styleBottom,
         contentHeading,
         ariaLabel,
         a11yCloseText } = input;
@@ -57,6 +61,10 @@ function getInitialState(input) {
         style,
         type,
         location,
+        styleTop,
+        styleLeft,
+        styleRight,
+        styleBottom,
         expanded: type === 'tourtip',
         expandInit: false,
         contentHeading,
@@ -121,6 +129,15 @@ function alignOverlay() {
     const hostBoundingBox = host.getBoundingClientRect();
     const overlayBoundingBox = overlay.getBoundingClientRect();
 
+    if (this.state.styleTop || this.state.styleLeft || this.state.styleRight || this.state.styleBottom) {
+        overlay.style.left = this.state.styleLeft;
+        overlay.style.right = this.state.styleRight;
+        overlay.style.top = this.state.styleTop;
+        overlay.style.bottom = this.state.styleBottom;
+
+        return;
+    }
+
     let flyoutLeftOffset = hostBoundingBox.width / 2;
 
     if (hostBoundingBox.width > overlayBoundingBox.width) {
@@ -128,18 +145,18 @@ function alignOverlay() {
     }
 
     // vertical alighment
-    const flyoutRight = `${(hostBoundingBox.width + 16)}px`;
-    const flyoutAboveBelowRight = `${(flyoutLeftOffset - (pointer.offsetWidth + 4))}px`;
-    const flyoutVerticalMiddle = `${((hostBoundingBox.width / 2) - (overlayBoundingBox.width / 2))}px`;
+    const flyoutRight = `${(hostBoundingBox.width + host.offsetLeft + 16)}px`;
+    const flyoutAboveBelowRight = `${(flyoutLeftOffset - (pointer.offsetWidth + 4) + host.offsetLeft)}px`;
+    const flyoutVertMiddle = `${((hostBoundingBox.width / 2) - (overlayBoundingBox.width / 2) + host.offsetLeft)}px`;
 
     // horizontal alignment
-    const flyoutAbove = `-${(overlayBoundingBox.height + 16)}px`;
-    const flyoutBelow = `${(hostBoundingBox.height + 16)}px`;
-    const flyoutLeftRightAbove = `-${(overlayBoundingBox.height - hostBoundingBox.height - 4)}px`;
-    const flyoutLeftRightBelow = `-4px`;
-    const flyoutHorizontalMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2))}px`;
+    const flyoutAbove = `-${(overlayBoundingBox.height - host.offsetTop + 16)}px`;
+    const flyoutBelow = `${(hostBoundingBox.height - host.offsetTop + 16)}px`;
+    const flyoutLeftRightAbove = `-${(overlayBoundingBox.height - hostBoundingBox.height - host.offsetTop - 4)}px`;
+    const flyoutLeftRightBelow = `-${(4 - host.offsetTop)}px`;
+    const flyoutHorzMiddle = `${((hostBoundingBox.height / 2) - (overlayBoundingBox.height / 2) + host.offsetTop)}px`;
 
-    let overlayLeft = flyoutAboveBelowRight;
+    let overlayLeft = flyoutVertMiddle;
     let overlayRight = 'auto';
     let overlayTop = flyoutAbove;
 
@@ -147,7 +164,7 @@ function alignOverlay() {
     switch (this.state.location) {
         case 'right':
             overlayLeft = flyoutRight;
-            overlayTop = flyoutHorizontalMiddle;
+            overlayTop = flyoutHorzMiddle;
             break;
         case 'right-bottom':
             overlayLeft = flyoutRight;
@@ -160,7 +177,7 @@ function alignOverlay() {
         case 'left':
             overlayLeft = 'auto';
             overlayRight = flyoutRight;
-            overlayTop = flyoutHorizontalMiddle;
+            overlayTop = flyoutHorzMiddle;
             break;
         case 'left-bottom':
             overlayLeft = 'auto';
@@ -173,12 +190,8 @@ function alignOverlay() {
             overlayTop = flyoutLeftRightAbove;
             break;
         case 'bottom':
-            overlayLeft = flyoutVerticalMiddle;
+            overlayLeft = flyoutVertMiddle;
             overlayTop = flyoutBelow;
-            break;
-        case 'top':
-            overlayLeft = flyoutVerticalMiddle;
-            overlayTop = flyoutAbove;
             break;
         case 'bottom-right':
             overlayLeft = flyoutAboveBelowRight;
@@ -195,8 +208,12 @@ function alignOverlay() {
             overlayTop = flyoutAbove;
             break;
         case 'top-right':
-        default:
             overlayLeft = flyoutAboveBelowRight;
+            overlayTop = flyoutAbove;
+            break;
+        case 'top':
+        default:
+            overlayLeft = flyoutVertMiddle;
             overlayTop = flyoutAbove;
             break;
     }

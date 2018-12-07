@@ -292,6 +292,10 @@
         "@style": "string",
         "@type": "string",
         "@location": "string",
+        "@style-top": "string",
+        "@style-left": "string",
+        "@style-right": "string",
+        "@style-bottom": "string",
         "@aria-label": "string",
         "@a11y-close-text": "string",
         "@hosts <host>[]": {
