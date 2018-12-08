@@ -286,11 +286,13 @@
     },
     "<ebay-tooltip>": {
         "renderer": "./src/components/ebay-tooltip/index.js",
+        "transformer": "./src/components/ebay-tooltip/transformer.js",
         "@*": "expression",
         "@html-attributes": "expression",
         "@class": "string",
         "@style": "string",
         "@type": "string",
+        "@icon": "string",
         "@location": "string",
         "@style-top": "string",
         "@style-left": "string",
@@ -298,6 +300,7 @@
         "@style-bottom": "string",
         "@aria-label": "string",
         "@a11y-close-text": "string",
+        "@iconTag <icon>": {},
         "@hosts <host>[]": {
             "@*": "expression",
             "@html-attributes": "expression",

@@ -7,6 +7,7 @@
     ${data.htmlAttributes}
     w-on-expander-expand='handleExpand'
     w-on-expander-collapse='handleCollapse'
+    w-preserve-body
     w-bind>
     <var tooltipId=`${data.baseClass}-${widget.id}`/>
     <if(!data.hosts || data.hosts.length === 0)>
@@ -16,7 +17,11 @@
             aria-describedby=tooltipId
             aria-expanded=(data.expandInit && data.expanded ? 'true' : 'false')
             aria-label=data.ariaLabel>
-            <ebay-icon type="inline" name="info"/>
+            <!-- Convoluted markup to satisfy both Skin and Marko -->
+            <div if(data.icon) body-only-if(true)>
+                <span if(data.iconTag) w-body=data.iconTag body-only-if(true)/>
+            </div>
+            <ebay-icon if(!data.icon) type="inline" name="info"/>
         </button>
     </if>
     <else>
