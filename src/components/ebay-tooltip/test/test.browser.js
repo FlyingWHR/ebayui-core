@@ -44,6 +44,32 @@ describe('given the default tooltip', () => {
     });
 });
 
+describe('given the tooltip with custom location', () => {
+    let widget;
+    let host;
+    let overlay;
+
+    beforeEach(() => {
+        const input = { contents: [{}], styleTop: '20px', styleLeft: '20px' };
+        widget = renderer.renderSync(input).appendTo(document.body).getWidget();
+        host = widget.el.querySelector('.tooltip__host');
+        overlay = widget.el.querySelector('.tooltip__overlay');
+    });
+
+    afterEach(() => widget.destroy());
+
+    describe('when the host element is hovered', () => {
+        beforeEach(() => {
+            testUtils.triggerEvent(host, 'expander-expand');
+        });
+
+        test('then it emits the marko event from expander-expand event', () => {
+            expect(overlay.style.top).to.equal('20px');
+            expect(overlay.style.left).to.equal('20px');
+        });
+    });
+});
+
 describe('given the default infotip', () => {
     let widget;
     let host;

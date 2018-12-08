@@ -1,6 +1,7 @@
 
 const expect = require('chai').expect;
 const testUtils = require('../../../common/test-utils/server');
+const transformer = require('../transformer');
 
 const pointerLocations = [
     'top-left',
@@ -83,6 +84,24 @@ describe('tooltip', () => {
             const $ = testUtils.getCheerio(context.render(input));
             expect($('.tooltip').length).to.equal(1);
             expect($(`.tooltip__pointer.tooltip__pointer--${pointerLocationsClassMap[location]}`).length).to.equal(1);
+        });
+    });
+
+    describe('transformer', () => {
+        const componentPath = '../index.js';
+
+        test('transforms an icon attribute into a tag', () => {
+            const tagString = '<ebay-tooltip icon="settings"/>';
+            const { el } = testUtils.runTransformer(transformer, tagString, componentPath);
+            const { body: { array: [iconEl] } } = el;
+            expect(iconEl.tagName).to.equal('ebay-tooltip:icon');
+        });
+
+        test('does not transform when icon attribute is missing', () => {
+            const tagString = '<ebay-tooltip/>';
+            const { el } = testUtils.runTransformer(transformer, tagString, componentPath);
+            const { body: { array: [iconEl] } } = el;
+            expect(iconEl).to.equal(undefined);
         });
     });
 
